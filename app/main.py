@@ -278,6 +278,21 @@ INDEX_HTML = """
         color: var(--muted);
       }
 
+      .support-row {
+        margin-top: 24px;
+      }
+
+      .support-link {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .support-link img {
+        display: block;
+        height: 36px;
+        border: 0;
+      }
+
       @media (max-width: 640px) {
         .card {
           padding: 24px;
@@ -313,6 +328,11 @@ INDEX_HTML = """
           <button id="copy-button" type="button">Copy</button>
         </div>
         <div id="status" class="status" aria-live="polite"></div>
+        <div class="support-row">
+          <a class="support-link" href="https://ko-fi.com/U7U21VX2BP" target="_blank" rel="noopener noreferrer">
+            <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=6" alt="Buy Me a Coffee at ko-fi.com" />
+          </a>
+        </div>
       </section>
     </main>
     <script>
