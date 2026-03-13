@@ -1,0 +1,18 @@
+[project]
+name = "public-ip-website"
+version = "0.1.0"
+description = "Minimal website that shows the visitor IP address"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.11",
+    "httpx>=0.28.1",
+    "uvicorn>=0.34.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false
