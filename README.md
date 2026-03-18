@@ -42,4 +42,6 @@ CF_TUNNEL_TOKEN=your-token ./scripts/install-fedora-cloudflare.sh
 
 The script will install Podman with `dnf` if needed, rebuild the local app image, recreate the Podman pod, generate systemd user units for the pod, and enable them so the stack starts again after reboot.
 
+Restart behavior is intentionally managed by systemd, not by Podman container restart flags. That avoids the common failure mode where generated units and `--restart` policies fight each other during shutdown or boot, which can leave `cloudflared` stopped after a restart.
+
 It also attempts to enable `loginctl` lingering for the current user, which is required on Fedora for user-level systemd services to come back automatically after boot.

@@ -13,6 +13,8 @@ CF_IMAGE=${CF_IMAGE:-docker.io/cloudflare/cloudflared:latest}
 CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN:-}
 SYSTEMD_USER_DIR=${XDG_CONFIG_HOME:-${HOME}/.config}/systemd/user
 SYSTEMD_POD_UNIT=${SYSTEMD_POD_UNIT:-pod-${POD_NAME}.service}
+SYSTEMD_RESTART_POLICY=${SYSTEMD_RESTART_POLICY:-always}
+SYSTEMD_RESTART_SEC=${SYSTEMD_RESTART_SEC:-10}
 
 require_command() {
     if command -v "$1" >/dev/null 2>&1; then
@@ -115,7 +117,12 @@ install_systemd_units() {
     echo "Generating systemd user units..."
     (
         cd "${temp_dir}"
-        podman generate systemd --new --files --name "${POD_NAME}"
+        podman generate systemd \
+            --new \
+            --files \
+            --name "${POD_NAME}" \
+            --restart-policy "${SYSTEMD_RESTART_POLICY}" \
+            --restart-sec "${SYSTEMD_RESTART_SEC}"
     )
 
     mv "${temp_dir}/pod-${POD_NAME}.service" "${SYSTEMD_USER_DIR}/"
@@ -153,7 +160,6 @@ main() {
     podman run -d \
         --name "${APP_CONTAINER_NAME}" \
         --pod "${POD_NAME}" \
-        --restart unless-stopped \
         "${APP_IMAGE}"
 
     echo "Starting cloudflared container ${CF_CONTAINER_NAME}..."
@@ -161,7 +167,6 @@ main() {
         --name "${CF_CONTAINER_NAME}" \
         --pod "${POD_NAME}" \
         --pull always \
-        --restart unless-stopped \
         "${CF_IMAGE}" \
         tunnel --no-autoupdate run --token "${CF_TUNNEL_TOKEN}"
 
